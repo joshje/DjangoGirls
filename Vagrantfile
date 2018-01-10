@@ -1,6 +1,13 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# Ensure that an adequate version of Vagrant is used
+Vagrant.require_version ">= 2.0.1"
+
+# Usually, host locale environment variables are passed to guest. It may cause
+# failures if the guest software do not support host locale.
+ENV["LC_ALL"] = "en_US.UTF-8"
+
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -12,12 +19,20 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "base"
+  config.vm.box = "ubuntu/trusty64"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
   # config.vm.box_check_update = false
+
+  # If specified, Vagrant will compare the checksum of the downloaded box to
+  # this value and error if they do not match. Checksum checking is only done
+  # when Vagrant must download the box.
+  # If this is specified, then "config.vm.box_download_checksum_type" must also
+  # be specified.
+  config.vm.box_download_checksum = true
+  config.vm.box_download_checksum_type = "sha256"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
@@ -67,4 +82,8 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get update
+    apt-get install -y apache2
+  SHELL
 end
