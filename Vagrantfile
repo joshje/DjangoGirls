@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "ubuntu/xenial64"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -84,6 +84,18 @@ Vagrant.configure("2") do |config|
   # SHELL
   config.vm.provision "shell", inline: <<-SHELL
     apt-get update
-    apt-get install -y apache2
+    apt-get install -y vim-gtk
+    apt-get install -y meld
+    apt-get install -y git
+    apt-get install -y python3
+    apt-get install -y python3-pip
+    apt-get install -y python3-venv
+    snap install atom --classic
+
+    git clone https://github.com/cabarnes/dotfiles.git /tmp/dotfiles &> /dev/null
+    if [ -e /tmp/dotfiles/install.sh ]; then
+      cd /tmp/dotfiles && ./install.sh
+    fi
+
   SHELL
 end
