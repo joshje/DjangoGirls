@@ -87,6 +87,7 @@ Vagrant.configure("2") do |config|
     apt-get install -y vim-gtk
     apt-get install -y meld
     apt-get install -y git
+    apt-get install -y gitk
     apt-get install -y python3
     apt-get install -y python3-pip
     apt-get install -y python3-venv
