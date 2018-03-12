@@ -84,7 +84,7 @@ celerybeat-schedule
 env/
 venv/
 ENV/
-
+myvenv/
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -100,3 +100,7 @@ ENV/
 
 # vagrant specific ignores
 .vagrant/
+
+# Ignore database file
+*.sqlite3
+
