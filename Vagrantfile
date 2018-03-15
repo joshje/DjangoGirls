@@ -92,6 +92,7 @@ Vagrant.configure("2") do |config|
     apt-get install -y vim-gtk
     apt-get install -y meld
     apt-get install -y git
+    apt-get install -y gnupg2
     apt-get install -y gitk
     apt-get install -y python3
     apt-get install -y python3-pip
@@ -102,6 +103,9 @@ Vagrant.configure("2") do |config|
     if [ -e /tmp/dotfiles/install.sh ]; then
       cd /tmp/dotfiles && ./install.sh
     fi
+
+    # ensure gpg knows how to prompt for passphrase
+    export GPG_TTY=$(tty)
 
   SHELL
 end
