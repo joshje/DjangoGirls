@@ -104,3 +104,5 @@ myvenv/
 # Ignore database file
 *.sqlite3
 
+# Editor temporary files
+*.swp
