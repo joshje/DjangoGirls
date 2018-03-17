@@ -105,7 +105,13 @@ Vagrant.configure("2") do |config|
     fi
 
     # ensure gpg knows how to prompt for passphrase
-    export GPG_TTY=$(tty)
+    GPG_EXPORT="export GPG_TTY=$(tty)"
+    if ! $(grep -qw "^\s${GPG_EXPORT}" .bashrc)
+    then
+        echo -n Exporting GPG TTY in .bashrc
+	echo ${GPG_EXPORT} >> .bashrc
+        echo  done.
+    fi
 
   SHELL
 end
