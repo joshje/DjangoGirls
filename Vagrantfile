@@ -87,25 +87,45 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
-  config.vm.provision "shell", inline: <<-SHELL
-    apt-get update
-    apt-get install -y vim-gtk
-    apt-get install -y meld
-    apt-get install -y git
-    apt-get install -y gnupg2
-    apt-get install -y gitk
-    apt-get install -y python3
-    apt-get install -y python3-pip
-    apt-get install -y python3-venv
-    snap install atom --classic
+  $script_apps = <<SCRIPT
+apt-get update
+apt-get install -y vim-gtk
+apt-get install -y meld
+apt-get install -y git
+apt-get install -y gnupg2
+apt-get install -y gitk
+apt-get install -y python3
+apt-get install -y python3-pip
+apt-get install -y python3-venv
+snap install atom --classic
+SCRIPT
 
-    git clone https://github.com/cabarnes/dotfiles.git /tmp/dotfiles &> /dev/null
-    if [ -e /tmp/dotfiles/install.sh ]; then
-      cd /tmp/dotfiles && ./install.sh
-    fi
+  config.vm.provision "shell" do |s|
+    s.inline=$script_apps
+  end
 
-    # ensure gpg knows how to prompt for passphrase
-    export GPG_TTY=$(tty)
+  $script_config = <<SCRIPT
+HOME="/home/vagrant"
+git clone https://github.com/cabarnes/dotfiles.git /tmp/dotfiles &> /dev/null
+if [ -e /tmp/dotfiles/install.sh ]; then
+  cd /tmp/dotfiles
+  sed -i'.bak' "s|~/|${HOME}/|g" install.sh
+  ./install.sh
+fi
 
-  SHELL
+# ensure gpg knows how to prompt for passphrase
+GPG_EXPORT='export GPG_TTY=\$(tty)'
+BASHRC_FILE="${HOME}/.bashrc"
+if ! $(grep -qw "^\s*${GPG_EXPORT}" ${BASHRC_FILE})
+then
+  echo -n "missing $(echo "${GPG_EXPORT}" | tr -d '\\') in ${BASHRC_FILE}..."
+  echo "$(echo "${GPG_EXPORT}" | tr -d '\\')" >> ${BASHRC_FILE}
+  echo added.
+fi
+SCRIPT
+
+  config.vm.provision "shell" do |t|
+    t.privileged=false
+    t.inline=$script_config
+  end
 end
