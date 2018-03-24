@@ -19,3 +19,17 @@ After installing Vagrant make sure to install the Vagrant VirtualBox Guest manag
 ```sh
 vagrant plugin install vagrant-vbguest
 ```
+
+## Editing dependencies
+The dependencies are stored in `requirements.txt`. This project uses [hashin](https://pypi.python.org/pypi/hashin) to make dependency managment more secure and still simple to use. 
+
+To add a new package to the dependencies (or update one) use: 
+```sh
+hashin "<package-name>==<version-number>" --algorithm=sha512 --verbose --python-version $(python3 --version | cut -d' ' -f2 | cut -d'.' -f1-2)
+```
+After the dependency is found and added to the requirements, *verify the hash is correct before installing or commiting the requirements change!*
+
+Then to install the dependencies use:
+```sh
+pip install --require-hashes -r requirements.txt
+```
