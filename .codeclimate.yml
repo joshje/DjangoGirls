@@ -27,3 +27,11 @@ checks:
 plugins:
   shellcheck:
     enabled: true
+  pep8:
+    enabled: true
+  csslint:
+    enabled: true
+  markdownlint:
+    enabled: true
+  fixme:
+    enabled: true
